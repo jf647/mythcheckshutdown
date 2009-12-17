@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+
+# exit on errors
+set -e
+
+logger -p local0.info -t checkshutdownok START
+logger -p local0.info -t checkshutdownok checking if we can shut down
+
+# check various things that preclude shutdown
+/home/mythtv/bin/checkshutdownok-mythjobs
+/home/mythtv/bin/checkshutdownok-importantprocs
+/home/mythtv/bin/checkshutdownok-sabnzbd
+/home/mythtv/bin/checkshutdownok-samba
+/home/mythtv/bin/checkshutdownok-loggedinusers
+/home/mythtv/bin/checkshutdownok-uptime
+
+# ok to shut down
+logger -p local0.info -t checkshutdownok safe to shut down
+logger -p local0.info -t checkshutdownok STOP
+exit 0
+
+#
+# EOF

@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+
+uptime=$(cat /proc/uptime | awk -F . '{print $1}')
+if test $uptime -le 600
+then
+  logger -p local0.notice -t checkshutdownok "NOT OK - system up for less than 10 minutes ($uptime seconds)"
+  exit 1
+else
+  logger -p local0.notice -t checkshutdownok system up for at least 10 minutes
+fi
+
+#
+# EOF

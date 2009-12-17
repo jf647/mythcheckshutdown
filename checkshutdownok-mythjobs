@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+
+# check for important processes
+if ! mythshutdown --check
+then
+  mythshutdown -s
+  status=$?
+  logger -p local0.notice -t checkshutdownok NOT OK - mythshutdown status is $status
+  exit 1
+else 
+  logger -p local0.notice -t checkshutdownok mythshutdown check passed
+fi
+
+#
+# EOF

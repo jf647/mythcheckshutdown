@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+
+# check if anyone is logged in
+if last | grep -q "still logged in"
+then
+  users=$(last | grep "still logged in" | awk '{print $1}' | sort | uniq | perl -pe 's/\n/, /' | perl -pe 's/, $//')
+  logger -p local0.notice -t checkshutdownok NOT OK - still logged in: $users
+  exit 1
+else
+  logger -p local0.notice -t checkshutdownok nobody logged in
+fi
+
+#
+# EOF

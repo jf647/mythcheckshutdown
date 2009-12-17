@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+#
+
+use strict;
+use warnings;
+
+use JSON::Any;
+use LWP::UserAgent;
+use Sys::Syslog;
+
+openlog 'checkshutdownok', undef, 'local0';
+
+my $status_url = 'http://192.168.1.20:9119/sabnzbd/api?mode=qstatus&output=json&apikey=7cb816ce5a4a0fb9e9d373c4514ba76b';
+
+# get JSON document
+my $ua = LWP::UserAgent->new;
+$ua->timeout(10);
+my $response = $ua->get($status_url);
+
+# if we can't get a response, we abort
+unless( $response->is_success ) {
+  syslog('notice', "NOT OK - can't get SABnzbd+ response (" . $response->status_line . ")");
+  exit(1);
+}
+
+# decode document
+my $j = JSON::Any->new;
+my $json = $j->jsonToObj($response->decoded_content);
+
+# ok to shut down if we are a) paused or b) there are no items in the queue
+if( defined $json->{paused} && 1 == $json->{paused} ) {
+  syslog('info', "SABnzbd+ is paused");
+}
+elsif( defined $json->{noofslots} && 0 == $json->{noofslots} ) {
+  syslog('info', "SABnzbd+ is active but no jobs in queue");
+}
+else {
+  syslog('notice', "NOT OK - SABnzbd+ is active with $json->{noofslots} jobs in queue");
+  exit(1);
+}
+
+# all done
+exit(0);
+
+#
+# EOF
