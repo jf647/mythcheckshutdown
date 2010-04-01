@@ -10,7 +10,7 @@ logger -p local0.info -t checkshutdownok checking if we can shut down
 # check various things that preclude shutdown
 /home/mythtv/bin/checkshutdownok-mythjobs
 /home/mythtv/bin/checkshutdownok-importantprocs
-/home/mythtv/bin/checkshutdownok-sabnzbd
+#/home/mythtv/bin/checkshutdownok-sabnzbd
 /home/mythtv/bin/checkshutdownok-samba
 /home/mythtv/bin/checkshutdownok-loggedinusers
 /home/mythtv/bin/checkshutdownok-uptime
