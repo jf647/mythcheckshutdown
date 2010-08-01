@@ -8,12 +8,24 @@ logger -p local0.info -t checkshutdownok START
 logger -p local0.info -t checkshutdownok checking if we can shut down
 
 # check various things that preclude shutdown
+dopublish=0
+if ! /home/mythtv/bin/checkshutdownok-mythpublish
+then
+  dopublish=1
+fi
 /home/mythtv/bin/checkshutdownok-mythjobs
 /home/mythtv/bin/checkshutdownok-importantprocs
 #/home/mythtv/bin/checkshutdownok-sabnzbd
 /home/mythtv/bin/checkshutdownok-samba
 /home/mythtv/bin/checkshutdownok-loggedinusers
 /home/mythtv/bin/checkshutdownok-uptime
+
+# publish if required and we would otherwise shut down
+if [ 0 != $topublish ]
+then
+  logger -p local0.info -t checkshutdownok running mythpublish
+  sudo -u mythtv -i /home/mythtv/bin/mythpublish_publish
+fi
 
 # ok to shut down
 logger -p local0.info -t checkshutdownok safe to shut down

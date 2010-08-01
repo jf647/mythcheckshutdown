@@ -2,7 +2,7 @@
 #
 
 # check for important processes
-runningprocs=$(ps -ef | egrep '(ffmpeg|mythcommflag|mythtranscode|skype|HandbrakeCLI)' | grep -v egrep | wc -l)
+runningprocs=$(ps -ef | egrep '(skype|mythpublish|nadtmythconvert)' | grep -v egrep | wc -l)
 if [ $runningprocs != 0 ]
 then
   logger -p local0.notice -t checkshutdownok NOT OK - $runningprocs important processes running

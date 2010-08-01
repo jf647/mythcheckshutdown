@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+
+# check if anything needs to be published, and if so run mythpublish_publish
+if ! sudo -u mythtv -i /home/mythtv/bin/mythpublish_publish --check
+then
+  logger -p local0.notice -t checkshutdownok NOT OK - mythpublish queue is not empty
+  exit 1
+else 
+  logger -p local0.notice -t checkshutdownok mythpublish check passed
+fi
+
+#
+# EOF
